@@ -14,6 +14,9 @@ import {
 import { useEffect, useState } from "react";
 import { Octokit } from "octokit";
 import Link from "next/link";
+import { pdf } from "../document";
+import axios from "axios";
+import { saveAs } from "file-saver";
 
 export default function Home({ user }) {
   const username = user;
@@ -26,11 +29,39 @@ export default function Home({ user }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
+  const [experience, setExperience] = useState({});
+  const [companyName, setCompanyName] = useState("");
+  const [role, setRole] = useState("");
+  const [date, setDate] = useState("");
+  const [description, setDescription] = useState("");
+  const [college, setCollege] = useState("");
+  const [degree, setDegree] = useState("");
+  const [collegeTime, setCollegeTime] = useState("");
+  const [finalData, setFinalData] = useState([]);
 
   useEffect(() => {
     getRepos();
     getUserData();
   });
+  function setResume() {
+    axios.post("/api/create", { name: "DHruv" }).then((res) => {
+      console.log(res);
+    });
+  }
+
+  function getResume() {
+    axios
+      .get("/api/get", { responseType: "blob" })
+      .then((res) => {
+        const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+
+        saveAs(pdfBlob, "newPdf.pdf");
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   // using octokit to get repos and user data
   async function getUserData() {
@@ -254,25 +285,263 @@ export default function Home({ user }) {
                   onChange={(e) => setBio(e.target.value)}
                 />
               </Stack>
-              <Center>
-                <Button
-                  width={["120px", "190px"]}
-                  height={["50px", "60px"]}
-                  borderRadius={"10px"}
-                  color={"whiteAlpha.700"}
-                  bgColor={"whiteAlpha.200"}
-                  _hover={{ bgColor: "whiteAlpha.400" }}
-                  backdropBlur={"40px"}
-                  borderColor={"whiteAlpha.400"}
-                  focusBorderColor="whiteAlpha.200"
-                  fontSize={["xs", "xl"]}
-                  onClick={() => console.log("clicked")}
-                >
-                  Submit
-                </Button>
-              </Center>
             </Flex>
           </Flex>
+        )}
+
+        {!loading && (
+          <Flex
+            direction={"column"}
+            justify={"center"}
+            align={"center"}
+            w={"100%"}
+            gap={"10"}
+            marginTop={"100px"}
+          >
+            <Heading fontSize={"3xl"} textColor={"white"}>
+              Enter Your Education
+            </Heading>
+            <Flex
+              w={"60%"}
+              direction={"column"}
+              gap={"40px"}
+              backgroundColor={"whiteAlpha.200"}
+              p={"10"}
+              borderRadius={"lg"}
+              backdropBlur={"40px"}
+              borderColor={"whiteAlpha.400"}
+              border={"3px solid whiteAlpha.700"}
+              _hover={{
+                borderColor: "whiteAlpha.500",
+                shadow: "xl",
+              }}
+            >
+              <Stack gap={"1"} w={"100%"} justify={"center"} align={"center"}>
+                <FormLabel color={"whiteAlpha.700"} fontSize={"2xl"}>
+                  College Name
+                </FormLabel>
+                <Input
+                  placeholder={"Enter College Name"}
+                  width={["60%", "60%", "70%"]}
+                  height={["50px", "55px", "60px"]}
+                  color={"white"}
+                  backgroundColor={"whiteAlpha.200"}
+                  backdropBlur={"40px"}
+                  borderColor={"whiteAlpha.300"}
+                  _outline={{ borderColor: "whiteAlpha.300" }}
+                  focusBorderColor="whiteAlpha.200"
+                  _placeholder={{ color: "white", fontSize: "xl" }}
+                  _hover={{ borderColor: "whiteAlpha.400" }}
+                  onChange={(e) => setCollege(e.target.value)}
+                />
+              </Stack>
+
+              <Stack gap={"1"} w={"100%"} justify={"center"} align={"center"}>
+                <FormLabel color={"whiteAlpha.700"} fontSize={"2xl"}>
+                  Time Period
+                </FormLabel>
+                <Input
+                  placeholder={"Enter Time Period"}
+                  width={["60%", "60%", "70%"]}
+                  height={["50px", "55px", "60px"]}
+                  color={"white"}
+                  backgroundColor={"whiteAlpha.200"}
+                  backdropBlur={"40px"}
+                  borderColor={"whiteAlpha.300"}
+                  _outline={{ borderColor: "whiteAlpha.300" }}
+                  focusBorderColor="whiteAlpha.200"
+                  _placeholder={{ color: "white", fontSize: "xl" }}
+                  _hover={{ borderColor: "whiteAlpha.400" }}
+                  onChange={(e) => setCollegeTime(e.target.value)}
+                />
+              </Stack>
+
+              <Stack gap={"1"} w={"100%"} justify={"center"} align={"center"}>
+                <FormLabel
+                  color={"whiteAlpha.700"}
+                  fontSize={"2xl"}
+                  justify={"left"}
+                >
+                  Degree
+                </FormLabel>
+                <Input
+                  placeholder="Enter Degree"
+                  width={["60%", "60%", "70%"]}
+                  height={["50px", "55px", "60px"]}
+                  color={"white"}
+                  backgroundColor={"whiteAlpha.200"}
+                  backdropBlur={"40px"}
+                  borderColor={"whiteAlpha.300"}
+                  _outline={{ borderColor: "whiteAlpha.300" }}
+                  focusBorderColor="whiteAlpha.200"
+                  _placeholder={{ color: "white", fontSize: "xl" }}
+                  _hover={{ borderColor: "whiteAlpha.400" }}
+                  onChange={(e) => setDegree(e.target.value)}
+                />
+              </Stack>
+            </Flex>
+          </Flex>
+        )}
+
+        {!loading && (
+          <Flex
+            direction={"column"}
+            justify={"center"}
+            align={"center"}
+            w={"100%"}
+            gap={"10"}
+            marginTop={"100px"}
+          >
+            <Heading fontSize={"3xl"} textColor={"white"}>
+              Enter Your Experience
+            </Heading>
+            <Flex
+              w={"60%"}
+              direction={"column"}
+              gap={"40px"}
+              backgroundColor={"whiteAlpha.200"}
+              p={"10"}
+              borderRadius={"lg"}
+              backdropBlur={"40px"}
+              borderColor={"whiteAlpha.400"}
+              border={"3px solid whiteAlpha.700"}
+              _hover={{
+                borderColor: "whiteAlpha.500",
+                shadow: "xl",
+              }}
+            >
+              <Stack gap={"1"} w={"100%"} justify={"center"} align={"center"}>
+                <FormLabel color={"whiteAlpha.700"} fontSize={"2xl"}>
+                  Company Name
+                </FormLabel>
+                <Input
+                  placeholder={"Enter Company Name"}
+                  width={["60%", "60%", "70%"]}
+                  height={["50px", "55px", "60px"]}
+                  color={"white"}
+                  backgroundColor={"whiteAlpha.200"}
+                  backdropBlur={"40px"}
+                  borderColor={"whiteAlpha.300"}
+                  _outline={{ borderColor: "whiteAlpha.300" }}
+                  focusBorderColor="whiteAlpha.200"
+                  _placeholder={{ color: "white", fontSize: "xl" }}
+                  _hover={{ borderColor: "whiteAlpha.400" }}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                />
+              </Stack>
+
+              <Stack gap={"1"} w={"100%"} justify={"center"} align={"center"}>
+                <FormLabel color={"whiteAlpha.700"} fontSize={"2xl"}>
+                  Time Period
+                </FormLabel>
+                <Input
+                  placeholder={"Enter Time Period"}
+                  width={["60%", "60%", "70%"]}
+                  height={["50px", "55px", "60px"]}
+                  color={"white"}
+                  backgroundColor={"whiteAlpha.200"}
+                  backdropBlur={"40px"}
+                  borderColor={"whiteAlpha.300"}
+                  _outline={{ borderColor: "whiteAlpha.300" }}
+                  focusBorderColor="whiteAlpha.200"
+                  _placeholder={{ color: "white", fontSize: "xl" }}
+                  _hover={{ borderColor: "whiteAlpha.400" }}
+                  onChange={(e) => setDate(e.target.value)}
+                />
+              </Stack>
+
+              <Stack gap={"1"} w={"100%"} justify={"center"} align={"center"}>
+                <FormLabel
+                  color={"whiteAlpha.700"}
+                  fontSize={"2xl"}
+                  justify={"left"}
+                >
+                  Role in the Company
+                </FormLabel>
+                <Input
+                  placeholder="Enter Role in the Company"
+                  width={["60%", "60%", "70%"]}
+                  height={["50px", "55px", "60px"]}
+                  color={"white"}
+                  backgroundColor={"whiteAlpha.200"}
+                  backdropBlur={"40px"}
+                  borderColor={"whiteAlpha.300"}
+                  _outline={{ borderColor: "whiteAlpha.300" }}
+                  focusBorderColor="whiteAlpha.200"
+                  _placeholder={{ color: "white", fontSize: "xl" }}
+                  _hover={{ borderColor: "whiteAlpha.400" }}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+              </Stack>
+              <Stack gap={"1"} w={"100%"} justify={"center"} align={"center"}>
+                <FormLabel
+                  color={"whiteAlpha.700"}
+                  fontSize={"2xl"}
+                  justify={"left"}
+                >
+                  Description of your work
+                </FormLabel>
+                <Input
+                  placeholder="Enter Description of your work"
+                  width={["60%", "60%", "70%"]}
+                  height={["50px", "55px", "60px"]}
+                  color={"white"}
+                  backgroundColor={"whiteAlpha.200"}
+                  backdropBlur={"40px"}
+                  borderColor={"whiteAlpha.300"}
+                  _outline={{ borderColor: "whiteAlpha.300" }}
+                  focusBorderColor="whiteAlpha.200"
+                  _placeholder={{ color: "white", fontSize: "xl" }}
+                  _hover={{ borderColor: "whiteAlpha.400" }}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </Stack>
+            </Flex>
+          </Flex>
+        )}
+
+        {!loading && (
+          <Center marginTop={"40px"}>
+            <Button
+              width={["120px", "190px"]}
+              height={["50px", "60px"]}
+              borderRadius={"10px"}
+              color={"whiteAlpha.700"}
+              bgColor={"whiteAlpha.200"}
+              _hover={{
+                bgColor: "whiteAlpha.300",
+                shadow: "xl",
+              }}
+              backdropBlur={"40px"}
+              borderColor={"whiteAlpha.400"}
+              focusBorderColor="whiteAlpha.200"
+              fontSize={["xs", "xl"]}
+              onClick={() => {
+                console.log("clicked");
+                setExperience({
+                  companyName: companyName,
+                  date: date,
+                  role: role,
+                  description: description,
+                });
+                setFinalData({
+                  name: name,
+                  data: data,
+                  projects: selected,
+                  email: email,
+                  bio: bio,
+                  experience: experience,
+                  degree: degree,
+                  college: college,
+                  collegeTime: collegeTime,
+                });
+                getResume();
+              }}
+              border={"1px solid whiteAlpha.200"}
+            >
+              Submit
+            </Button>
+          </Center>
         )}
       </Box>
     </>
