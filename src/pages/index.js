@@ -68,7 +68,7 @@ export default function Home() {
                 _hover={{ borderColor: "whiteAlpha.400" }}
                 onChange={(e) => setUsername(e.target.value)}
               />
-              <Link href={{ pathname: `/projects`, query: { user: username } }}>
+              <Link href={{ pathname: `/datafill`, query: { user: username } }}>
                 <Button
                   width={["120px", "190px"]}
                   height={["50px", "60px"]}
