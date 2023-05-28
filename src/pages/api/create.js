@@ -3,7 +3,7 @@ var fs = require("fs");
 const pdfdoc = require("../document/index");
 
 export default function handler(req, res) {
-  pdf.create(pdfdoc("jay shree ram"), {}).toFile("result.pdf", (err) => {
+  pdf.create(pdfdoc(req.body), {}).toFile("resume.pdf", (err) => {
     if (err) {
       res.send(Promise.reject());
     }

@@ -4,7 +4,7 @@ var path = require("path");
 export default function handler(req, res) {
   console.log(__dirname);
   if (req.method === "GET" || req.method === "get") {
-    const filePath = path.join(process.cwd(), `result.pdf`);
+    const filePath = path.join(process.cwd(), `resume.pdf`);
     try {
       const imageBuffer = fs.readFileSync(filePath);
       res.setHeader("Content-Type", "application/pdf");

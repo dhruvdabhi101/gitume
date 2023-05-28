@@ -25,6 +25,7 @@ export default function Home({ user }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState([]);
+  const [selectedProject, setSelectedProject] = useState([]);
   const [userData, setUserData] = useState({});
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -37,16 +38,21 @@ export default function Home({ user }) {
   const [college, setCollege] = useState("");
   const [degree, setDegree] = useState("");
   const [collegeTime, setCollegeTime] = useState("");
-  const [finalData, setFinalData] = useState([]);
+  const [finalData, setFinalData] = useState({});
 
   useEffect(() => {
     getRepos();
     getUserData();
   });
   function setResume() {
-    axios.post("/api/create", { name: "DHruv" }).then((res) => {
-      console.log(res);
-    });
+    axios
+      .post("/api/create", finalData)
+      .then((res) => {
+        console.log(res);
+      })
+      .then(() => {
+        getResume();
+      });
   }
 
   function getResume() {
@@ -55,7 +61,7 @@ export default function Home({ user }) {
       .then((res) => {
         const pdfBlob = new Blob([res.data], { type: "application/pdf" });
 
-        saveAs(pdfBlob, "newPdf.pdf");
+        saveAs(pdfBlob, "resume.pdf");
         console.log(res);
       })
       .catch((err) => {
@@ -271,7 +277,7 @@ export default function Home({ user }) {
                   Bio{" "}
                 </FormLabel>
                 <Input
-                  value={userData.bio}
+                  placeholder={"Enter Bio"}
                   width={["60%", "60%", "70%"]}
                   height={["50px", "55px", "60px"]}
                   color={"white"}
@@ -524,10 +530,13 @@ export default function Home({ user }) {
                   role: role,
                   description: description,
                 });
+                data["projects"] = selected;
                 setFinalData({
-                  name: name,
-                  data: data,
-                  projects: selected,
+                  username: user,
+                  personName: name,
+                  data: userData,
+                  selectedProject: selected,
+                  repoData: data,
                   email: email,
                   bio: bio,
                   experience: experience,
@@ -535,7 +544,7 @@ export default function Home({ user }) {
                   college: college,
                   collegeTime: collegeTime,
                 });
-                getResume();
+                setResume();
               }}
               border={"1px solid whiteAlpha.200"}
             >
